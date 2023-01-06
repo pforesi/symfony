@@ -50,7 +50,7 @@ class HttpClientDataCollectorTest extends TestCase
         $sut->registerClient('http_client2', $httpClient2);
         $sut->registerClient('http_client3', $httpClient3);
         $this->assertEquals(0, $sut->getRequestCount());
-        $sut->collect(new Request(), new Response());
+        $sut->lateCollect();
         $this->assertEquals(3, $sut->getRequestCount());
     }
 
@@ -79,7 +79,7 @@ class HttpClientDataCollectorTest extends TestCase
         $sut->registerClient('http_client2', $httpClient2);
         $sut->registerClient('http_client3', $httpClient3);
         $this->assertEquals(0, $sut->getErrorCount());
-        $sut->collect(new Request(), new Response());
+        $sut->lateCollect();
         $this->assertEquals(1, $sut->getErrorCount());
     }
 
@@ -108,7 +108,7 @@ class HttpClientDataCollectorTest extends TestCase
         $sut->registerClient('http_client2', $httpClient2);
         $sut->registerClient('http_client3', $httpClient3);
         $this->assertEquals([], $sut->getClients());
-        $sut->collect(new Request(), new Response());
+        $sut->lateCollect();
         $collectedData = $sut->getClients();
         $this->assertEquals(0, $collectedData['http_client1']['error_count']);
         $this->assertEquals(1, $collectedData['http_client2']['error_count']);
@@ -140,7 +140,7 @@ class HttpClientDataCollectorTest extends TestCase
         $sut->registerClient('http_client2', $httpClient2);
         $sut->registerClient('http_client3', $httpClient3);
         $this->assertEquals([], $sut->getClients());
-        $sut->collect(new Request(), new Response());
+        $sut->lateCollect();
         $collectedData = $sut->getClients();
         $this->assertCount(2, $collectedData['http_client1']['traces']);
         $this->assertCount(1, $collectedData['http_client2']['traces']);
@@ -157,7 +157,7 @@ class HttpClientDataCollectorTest extends TestCase
         ]);
         $sut = new HttpClientDataCollector();
         $sut->registerClient('http_client1', $httpClient1);
-        $sut->collect(new Request(), new Response());
+        $sut->lateCollect();
         $collectedData = $sut->getClients();
         $this->assertCount(1, $collectedData['http_client1']['traces']);
         $sut->reset();
